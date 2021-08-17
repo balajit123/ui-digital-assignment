@@ -1,0 +1,91 @@
+<div class="container">
+
+  <div *ngIf="!users || users.length <= 0">
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-2 col-md-3 col-sm-1" *ngFor="let user of users" >
+      <button [class]="user.name === selectedUser ? 'btn-primary selected-btn': 'btn-primary'" (click)="fetchUserPosts(user)">{{getUserFirstName(user.name)}}</button>
+    </div>
+  </div>
+
+  <div *ngIf="selectedUser">
+    <div class="row">
+      <div class="col-8 fw-bold">Posts from {{selectedUser}}:</div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedUser && (!pagedPosts || pagedPosts.length <= 0)">
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngFor="let post of pagedPosts">
+    <div class="container col-8">
+      <div class="row">
+        <span class="text-center header-background">{{post.title}}</span>
+      </div>
+      <div class="row">
+        <span class="header-background-copy">{{post.body}}</span>
+      </div>
+
+      <div *ngIf="isExpanded(post.id)">
+        <div class="row">
+          <div class="container">
+            <div class="row">
+              <span class="fw-bold">Comments:</span>
+            </div>
+
+            <div *ngIf="isExpanded(post.id) && (!post.comments || post.comments.length <= 0)">
+              <div class="text-center">
+                <div class="spinner-border" role="status">
+                  <span class="sr-only"></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row comments" *ngFor="let comment of post.comments">
+              <div class="container">
+                <div class="row">
+                  <span><b>Name:</b> {{comment.name}}</span>
+                </div>
+                <div class="row">
+                  <span><b>Comment:</b> {{comment.body}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container col-2">
+      <div class="row">
+        <button class="btn-primary w-25" (click)="loadComments(post)">{{isExpanded(post.id) ? '-' : '+'}}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="selectedUser && pagedPosts && pagedPosts.length > 0 && !allLoaded">
+    <div class="container col-8">
+      <div class="row">
+        <div class="col-7"></div>
+        <div class="col-1">
+          <button class="btn-primary" (click)="loadAllPosts()">...Load all</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
